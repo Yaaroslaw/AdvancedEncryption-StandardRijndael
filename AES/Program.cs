@@ -1,66 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Security.Cryptography;
 
 namespace AES
-{
-    class Program
+{/// <summary>
+/// Need to add Event, Handler
+/// </summary>
+    public class Program
     {
         public static void Main()
         {
-            try
+            Console.WriteLine("Enter your email:");
+            //EmailService.EmailValidationExample();  USE THIS TO SEE HOW VALIDATION WORKS
+            bool isEmailValid = EmailService.EmailValidation(Console.ReadLine());
+            if (isEmailValid)
             {
-                string line = "";
-                int counter = 0;
-
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                try
                 {
+                    string line = "";
+                    int counter = 0;
 
-                    // Read the file and display it line by line.
-                    using (StreamReader file = new StreamReader("FileToEncrypt.txt"))
-                    using (FileStream byteWriter = new FileStream("EncryptedData.txt", FileMode.Append, FileAccess.Write))
-                    using (StreamWriter resultFile = new StreamWriter("DecryptedData.txt"))
+                    using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
                     {
-                        while ((line = file.ReadLine()) != null)
-                        {
-                            Console.WriteLine(line);
-                            counter++;
-                            var words = line.Split();
-                            // Writes a block of bytes to this stream using data from
-                            // a byte array.
-                            byte[] encrypted = EncryptStringToBytes_Aes(words[1], myAes.Key, myAes.IV);
-                            byteWriter.Write(encrypted, 0, encrypted.Length);
-                            resultFile.Write(Convert.ToBase64String(encrypted));
-                            // Decrypt the bytes to a string.
-                            string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
-                            //Base64Encode("WHAAAAT");
-                            Console.WriteLine(Convert.ToBase64String(encrypted));
-                            Console.WriteLine(Base64Decode(Convert.ToBase64String(encrypted)));
-                            
-                            Console.WriteLine("Round Trip: {0}", roundtrip);
-                            resultFile.WriteLine(words[0] + encrypted);
 
+                        // Read the file and display it line by line.
+                        using (StreamReader file = new StreamReader("FileToEncrypt.txt"))
+                        using (FileStream byteWriter = new FileStream("EncryptedData.txt", FileMode.Append, FileAccess.Write))
+                        using (StreamWriter resultFile = new StreamWriter("DecryptedData.txt"))
+                        {
+                            while ((line = file.ReadLine()) != null)
+                            {
+                                Console.WriteLine(line);
+                                counter++;
+                                var words = line.Split();
+                                // Writes a block of bytes to this stream using data from
+                                // a byte array.
+                                byte[] encrypted = EncryptStringToBytes_Aes(words[1], myAes.Key, myAes.IV);
+                                byteWriter.Write(encrypted, 0, encrypted.Length);
+                                resultFile.Write(Convert.ToBase64String(encrypted));
+                                // Decrypt the bytes to a string.
+                                string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
+                                Console.WriteLine(Convert.ToBase64String(encrypted));
+                                Console.WriteLine(Base64Decode(Convert.ToBase64String(encrypted)));
+
+                                Console.WriteLine("Round Trip: {0}", roundtrip);
+                                resultFile.WriteLine(words[0] + encrypted);
+
+                            }
                         }
+
                     }
 
                 }
-
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error: {0}", e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine("Error: {0}", e.Message);
+                Console.WriteLine("Your email is not valid!");
             }
 
         }
 
-
         //Encrypt string using AesCryptoServiceProvider
-
         static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             // Check arguments.
@@ -93,17 +99,13 @@ namespace AES
                             swEncrypt.Write(plainText);
                         }
                         encrypted = msEncrypt.ToArray();
-                        //Console.WriteLine(plainText);
                     }
                 }
             }
-
-
             // Return the encrypted bytes from the memory stream.
             return encrypted;
 
         }
-       
         
         // Decrypt string using AesCryptoServiceProvider
         static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
@@ -144,11 +146,8 @@ namespace AES
                         }
                     }
                 }
-
             }
-
             return plaintext;
-
         }
 
         public static string Base64Encode(string plainText)
@@ -161,6 +160,5 @@ namespace AES
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
-
     }
 }
