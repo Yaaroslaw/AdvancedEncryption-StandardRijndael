@@ -55,21 +55,20 @@ namespace AES
         }
 
         //Encrypt string using AesCryptoServiceProvider
-        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] IV)
         {
-            // Check arguments.
             if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(plainText));
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException(nameof(key));
             if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(IV));
             byte[] encrypted;
             // Create an AesCryptoServiceProvider object
             // with the specified key and IV.
             using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
             {
-                aesAlg.Key = Key;
+                aesAlg.Key = key;
                 aesAlg.IV = IV;
 
                 // Create a decrytor to perform the stream transform.
@@ -96,25 +95,22 @@ namespace AES
         }
         
         // Decrypt string using AesCryptoServiceProvider
-        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] IV)
         {
-            // Check arguments.
             if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException("cipherText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(cipherText));
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException(nameof(key));
             if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(IV));
 
-            // Declare the string used to hold
-            // the decrypted text.
             string plaintext = null;
 
             // Create an AesCryptoServiceProvider object
             // with the specified key and IV.
             using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
             {
-                aesAlg.Key = Key;
+                aesAlg.Key = key;
                 aesAlg.IV = IV;
 
                 // Create a decrytor to perform the stream transform.
