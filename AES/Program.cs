@@ -12,56 +12,44 @@ namespace AES
     {
         public static void Main()
         {
+            var isEmailValid = false;
             Console.WriteLine("Enter your email:");
-            //EmailService.EmailValidationExample();  USE THIS TO SEE HOW VALIDATION WORKS
-            bool isEmailValid = EmailService.EmailValidation(Console.ReadLine());
-            if (isEmailValid)
+            while (!isEmailValid){
+
+                isEmailValid = EmailService.EmailValidation(Console.ReadLine());
+                if (isEmailValid)
+                    break;
+                Console.WriteLine("Please, try again:");
+            }
+            //EmailService.EmailValidationExample();  UNCOMMENT THIS TO SEE HOW VALIDATION WORKS   
+            try
             {
-                try
+                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
                 {
-                    string line = "";
-                    int counter = 0;
-
-                    using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                    using (StreamReader file = new StreamReader("FileToEncrypt.txt")) 
+                    using (FileStream byteWriter = new FileStream("EncryptedData.txt", FileMode.Append, FileAccess.Write)) 
+                    using (StreamWriter resultFile = new StreamWriter("DecryptedData.txt"))
                     {
-
-                        // Read the file and display it line by line.
-                        using (StreamReader file = new StreamReader("FileToEncrypt.txt"))
-                        using (FileStream byteWriter = new FileStream("EncryptedData.txt", FileMode.Append, FileAccess.Write))
-                        using (StreamWriter resultFile = new StreamWriter("DecryptedData.txt"))
+                        string line = "";
+                        while ((line = file.ReadLine()) != null)
                         {
-                            while ((line = file.ReadLine()) != null)
-                            {
-                                Console.WriteLine(line);
-                                counter++;
-                                var words = line.Split();
-                                // Writes a block of bytes to this stream using data from
-                                // a byte array.
-                                byte[] encrypted = EncryptStringToBytes_Aes(words[1], myAes.Key, myAes.IV);
-                                byteWriter.Write(encrypted, 0, encrypted.Length);
-                                resultFile.Write(Convert.ToBase64String(encrypted));
-                                // Decrypt the bytes to a string.
-                                string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
-                                Console.WriteLine(Convert.ToBase64String(encrypted));
-                                Console.WriteLine(Base64Decode(Convert.ToBase64String(encrypted)));
+                            var words = line.Split();
+                            // Writes a block of bytes to this stream using data from
+                            // a byte array.
+                            byte[] encrypted = EncryptStringToBytes_Aes(words[1], myAes.Key, myAes.IV);
+                            byteWriter.Write(encrypted, 0, encrypted.Length);
+                            resultFile.Write(Convert.ToBase64String(encrypted));
+                            // Decrypt the bytes to a string.
+                            string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
+                            resultFile.WriteLine(words[0] + encrypted);
 
-                                Console.WriteLine("Round Trip: {0}", roundtrip);
-                                resultFile.WriteLine(words[0] + encrypted);
-
-                            }
                         }
-
                     }
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error: {0}", e.Message);
                 }
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine("Your email is not valid!");
+                Console.WriteLine("Error: {0}", e.Message);
             }
 
         }

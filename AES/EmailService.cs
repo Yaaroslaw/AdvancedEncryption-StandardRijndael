@@ -16,8 +16,6 @@ namespace AES
                 isValid = true;
 
             return isValid;
-
-
         }
         public static void EmailValidationExample()
         {
@@ -32,19 +30,11 @@ namespace AES
             {
 
                 if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
-                {
                     Console.WriteLine("fail[2]");
-                    continue;
-                }
-                else
-                {
-                    Console.WriteLine("succes[2]");
-                    continue;
-                }
 
+                else
+                    Console.WriteLine("succes[2]");
             }
         }
-
     }
-     
 }
