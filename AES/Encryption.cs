@@ -7,15 +7,18 @@ namespace AES
 {
     public class Encryption
     {        
+        private static void encryptedException(byte[] arrayOfBytes)
+        {
+            if (arrayOfBytes == null || arrayOfBytes.Length <= 0)
+                throw new ArgumentNullException(nameof(arrayOfBytes));
+        }
         //Encrypt string using AesCryptoServiceProvider
         public static byte[] EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] IV)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
-            if (key == null || key.Length <= 0)
-                throw new ArgumentNullException(nameof(key));
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException(nameof(IV));
+            encryptedException(key);
+            encryptedException(IV);
             byte[] encrypted;
             // Create an AesCryptoServiceProvider object
             // with the specified key and IV.
@@ -34,7 +37,6 @@ namespace AES
                     {
                         using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
                         {
-
                             //Write all data to the stream.
                             swEncrypt.Write(plainText);
                         }
@@ -44,18 +46,14 @@ namespace AES
             }
             // Return the encrypted bytes from the memory stream.
             return encrypted;
-
         }
 
         // Decrypt string using AesCryptoServiceProvider
         public static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] IV)
         {
-            if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException(nameof(cipherText));
-            if (key == null || key.Length <= 0)
-                throw new ArgumentNullException(nameof(key));
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException(nameof(IV));
+            encryptedException(cipherText);
+            encryptedException(key);
+            encryptedException(IV);
 
             string plaintext = null;
 

@@ -8,11 +8,9 @@ namespace AES
 /// Need to add Event, Handler
 /// </summary>
     public class Program
-    {
-        
+    {      
         public static void Main()
-        {
-           
+        {           
             var isEmailValid = false;
             Console.WriteLine("Enter your email:");
             while (!isEmailValid){
@@ -27,7 +25,6 @@ namespace AES
             {
                 using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
                 {
-                    ;
                     using (StreamReader file = new StreamReader("FileToEncrypt.txt")) 
                     using (FileStream byteWriter = new FileStream("EncryptedData.txt", FileMode.Append, FileAccess.Write)) 
                     using (StreamWriter resultFile = new StreamWriter("DecryptedData.txt"))
