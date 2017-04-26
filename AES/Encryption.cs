@@ -5,14 +5,18 @@ using System.IO;
 
 namespace AES
 {
+    /// <summary>
+    /// Encrypt and  decrypt from/to string/array of bytes
+    /// </summary>
     public class Encryption
-    {        
-        private static void encryptedException(byte[] arrayOfBytes)
-        {
-            if (arrayOfBytes == null || arrayOfBytes.Length <= 0)
-                throw new ArgumentNullException(nameof(arrayOfBytes));
-        }
-        //Encrypt string using AesCryptoServiceProvider
+    {
+        /// <summary>
+        /// Encrypt using AES
+        /// </summary>
+        /// <param name="plainText"> String to be encrypted</param>
+        /// <param name="key"></param>
+        /// <param name="IV"></param>
+        /// <returns></returns>
         public static byte[] EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] IV)
         {
             if (plainText == null || plainText.Length <= 0)
@@ -48,7 +52,13 @@ namespace AES
             return encrypted;
         }
 
-        // Decrypt string using AesCryptoServiceProvider
+        /// <summary>
+        /// Decrypt from AES
+        /// </summary>
+        /// <param name="cipherText"> Array of bytes in which dencrypted info will be saved</param>
+        /// <param name="key"></param>
+        /// <param name="IV"></param>
+        /// <returns></returns>
         public static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] IV)
         {
             encryptedException(cipherText);
@@ -83,6 +93,12 @@ namespace AES
                 }
             }
             return plaintext;
+        }
+
+        private static void encryptedException(byte[] arrayOfBytes)
+        {
+            if (arrayOfBytes == null || arrayOfBytes.Length <= 0)
+                throw new ArgumentNullException(nameof(arrayOfBytes));
         }
     }
 }
